@@ -11,14 +11,14 @@ locals {
   rg_name = var.resource_group.create ? azurerm_resource_group.this["this"].name : data.azurerm_resource_group.existing[0].name
   rg_loc  = var.resource_group.create ? azurerm_resource_group.this["this"].location : (try(var.resource_group.location, null) != null ? var.resource_group.location : data.azurerm_resource_group.existing[0].location)
 
-  lb_name_raw = "lb-${local.prefix}-${try(var.load_balancer.name_suffix, "001")}"
-  lb_name     = coalesce(try(var.load_balancer.name, null), substr(replace(lower(local.lb_name_raw), "/[^0-9a-z-]/", ""), 0, 80))
+  # Resource names: use var.name directly as the full name
+  lb_name = var.name
 
   backend_pools_by_name = { for p in var.backend_pools : p.name => p }
   probes_by_name        = { for p in var.probes : p.name => p }
 
   create_public_ip = try(var.load_balancer.public_ip.enabled, false)
-  public_ip_name   = coalesce(try(var.load_balancer.public_ip.name, null), "pip-lb-${local.prefix}-${try(var.load_balancer.name_suffix, "001")}")
+  public_ip_name   = coalesce(try(var.load_balancer.public_ip.name, null), "pip-${local.lb_name}")
 
   frontends_by_name = { for f in var.load_balancer.frontends : f.name => f }
 
