@@ -32,7 +32,6 @@ variable "diagnostics" {
 variable "load_balancer" {
   description = "Load Balancer configuration. Supports internal (subnet) and public (public IP) frontends."
   type = object({
-    name_suffix = optional(string, "001")
     name        = optional(string)
 
     sku      = optional(string, "Standard") # Basic | Standard | Gateway
